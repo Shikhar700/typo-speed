@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import Home from "./components/home/Home";
+import { useRef } from "react";
+import Header from "./components/Header";
+import Settings from "./components/settings/Settings";
+import { useAppSelector } from "./redux/hooks";
 
-function App() {
+const App = () => {
+  const theme = useAppSelector((state) => state.theme.theme);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div
+        onClick={() => {
+          containerRef.current?.focus();
+        }}
+        onMouseOver={() => {
+          document.body.style.cursor = "context-menu";
+        }}
+        className={`${theme}`}
+      >
+        <main className=" w-full h-full top-0 fixed z-[-1] bg-light"></main>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home ref={containerRef} />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
