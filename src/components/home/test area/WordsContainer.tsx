@@ -374,6 +374,7 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
   return (
     <main className="w-full flex justify-center">
       <div
+        contentEditable={false}
         id="container"
         tabIndex={0}
         ref={containerRef}
