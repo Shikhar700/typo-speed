@@ -232,6 +232,7 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
   };
 
   const keyDownHandler = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    event.preventDefault();
     if (!(quickRestart === "off")) {
       if (event.key === (quickRestart === "esc" ? "Escape" : "Enter")) {
         dispatch(CHANGE_IS_CHANGED());
@@ -374,13 +375,13 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
   return (
     <main className="w-full flex justify-center">
       <div
-        contentEditable={false}
+        contentEditable={true}
         id="container"
         tabIndex={0}
         ref={containerRef}
         onKeyDown={keyDownHandler}
         className={
-          "w-[1200px]  overflow-hidden  flex flex-wrap outline-none px-1  font-[3000] font-roboto text-lightTest" +
+          "w-[1200px]  overflow-hidden  flex flex-wrap outline-none px-1  font-[3000] font-roboto text-lightTest caret-transparent select-none" +
           " " +
           (fontSize === "small"
             ? "h-[120px] text-[25px] leading-[40px]"
