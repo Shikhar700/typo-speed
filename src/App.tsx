@@ -7,7 +7,7 @@ import { useAppSelector } from "./redux/hooks";
 
 const App = () => {
   const theme = useAppSelector((state) => state.theme.theme);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -18,7 +18,7 @@ const App = () => {
         onMouseOver={() => {
           document.body.style.cursor = "context-menu";
         }}
-        className={`${theme}`}
+        className={`${theme} transition-colors duration-100`}
       >
         <main className=" w-full h-full top-0 fixed z-[-1] bg-light"></main>
         <Header />

@@ -3,7 +3,7 @@ import WordsContainer from "./WordsContainer";
 import { useAppSelector } from "../../../redux/hooks";
 import { forwardRef } from "react";
 
-const TestArea = forwardRef<HTMLDivElement>((props, ref) => {
+const TestArea = forwardRef<HTMLInputElement>((props, ref) => {
   const bgBlur = useAppSelector((state) => state.blurBg.blur);
   return (
     <>

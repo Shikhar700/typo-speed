@@ -5,7 +5,7 @@ import { useAppSelector } from "../../redux/hooks";
 import { forwardRef } from "react";
 import TestResult from "./test result/TestResult";
 
-const Home = forwardRef<HTMLDivElement>((props, ref) => {
+const Home = forwardRef<HTMLInputElement>((props, ref) => {
   const testFinished = useAppSelector((state) => state.testFinished.finished);
 
   return (

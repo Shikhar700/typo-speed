@@ -15,7 +15,7 @@ import { SET_TIME_TAKEN } from "../../../redux/slices/time taken/TimeTakenSlice"
 import { SET_KEYPRESS_COUNT } from "../../../redux/slices/key press count/KeyPressCountSlice";
 import { CHANGE_IS_CHANGED } from "../../../redux/slices/setting changed/SettingChangedSlice";
 
-const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
+const WordsContainer = forwardRef<HTMLInputElement>((props, containerRef) => {
   const mode = useAppSelector((state) => state.testMode.mode);
   const value = useAppSelector((state) => state.testValue.value);
   const timeDuration = useAppSelector((state) => state.timeDuration.duration);
@@ -66,15 +66,6 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
   const [startTime, setStartTime] = useState<number>(0);
   const [keyPress, setKeyPress] = useState<number>(0);
 
-  //font size and spacing state
-  const [containerHeight, setContainerHeight] = useState<number>(0);
-  const [wordSize, setWordSize] = useState<number>(0);
-  const [lineHeight, setLineHeight] = useState<number>(0);
-  const [caretSize, setCaretSize] = useState<number>(0);
-  const [caretPosition, setCaretPosition] = useState<number>(0);
-  const [spacingLetter, setSpacingLetter] = useState<number>(0);
-  const [spacingWord, setSpacingWord] = useState<number>(0);
-
   //input state
   const [inpValue, setInpValue] = useState<string>("");
 
@@ -103,6 +94,7 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
     setTestEnd(false);
     setStartTime(0);
     setKeyPress(0);
+    setInpValue("");
 
     //clearing interval
     clearInterval(intervalRef.current);
@@ -176,57 +168,6 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
     }
   }, [testEnd]);
 
-  //useEffect to set font size
-  useEffect(() => {
-    if (fontSize === "small") {
-      setContainerHeight(120);
-      setWordSize(25);
-      setLineHeight(40);
-      setCaretSize(35);
-      setCaretPosition(-10);
-    }
-    if (fontSize === "medium") {
-      setContainerHeight(180);
-      setWordSize(30);
-      setLineHeight(60);
-      setCaretSize(40);
-      setCaretPosition(-13);
-    }
-    if (fontSize === "large") {
-      setContainerHeight(210);
-      setWordSize(45);
-      setLineHeight(70);
-      setCaretSize(55);
-      setCaretPosition(-16);
-    }
-  }, [fontSize]);
-
-  //useEffect to set letter spacing
-  useEffect(() => {
-    if (letterSpacing === "small") {
-      setSpacingLetter(1);
-    }
-    if (letterSpacing === "medium") {
-      setSpacingLetter(2);
-    }
-    if (letterSpacing === "large") {
-      setSpacingLetter(4);
-    }
-  }, [letterSpacing]);
-
-  //useEffect to set word spacing
-  useEffect(() => {
-    if (wordSpacing === "small") {
-      setSpacingWord(4);
-    }
-    if (wordSpacing === "medium") {
-      setSpacingWord(6);
-    }
-    if (wordSpacing === "large") {
-      setSpacingWord(8);
-    }
-  }, [wordSpacing]);
-
   const wordGenerator = () => {
     let arr = [];
     if (mode === "time") {
@@ -236,146 +177,6 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
     }
     arr.map((ins) => setDisplayWord((prev) => [...prev, ins]));
   };
-
-  // const keyDownHandler = (event: React.KeyboardEvent<HTMLDivElement>) => {
-  //   if (!(quickRestart === "off")) {
-  //     if (event.key === (quickRestart === "esc" ? "Escape" : "Enter")) {
-  //       dispatch(CHANGE_IS_CHANGED());
-  //     }
-  //   }
-
-  //   if (checkValidKey(event.key)) {
-  //     document.body.style.cursor = "none";
-  //     if (!testStart) {
-  //       setTestStart(true);
-  //       if (mode === "time") {
-  //         setStartTime(new Date().getTime());
-  //         let timer = timeDuration;
-  //         intervalRef.current = setInterval(() => {
-  //           if (timer > 1) {
-  //             timer--;
-  //             dispatch(DECREMENT_DURATION());
-  //           } else {
-  //             dispatch(DECREMENT_DURATION());
-  //             setTimeout(() => {
-  //               clearInterval(intervalRef.current);
-  //               setTestEnd(true);
-  //               document.body.style.cursor = "context-menu";
-  //             }, 50);
-  //           }
-  //         }, 1000);
-  //       } else {
-  //         setStartTime(new Date().getTime());
-  //       }
-  //     }
-  //     let wordIndex: number = activeWordIndex;
-  //     let letterIndex: number = activeLetterIndex;
-  //     let key_press: number = keyPress;
-  //     let caret_last: boolean = caretLast;
-  //     let extra_letter: boolean = extraLetter;
-  //     let extra_letter_count: number = extraLetterCount;
-  //     let display_words: string[] = displayWord;
-  //     let total_mistakes: number = totalMistakes;
-  //     let current_mistakes: number = currentMistakes;
-  //     let correct_words: number = correctWords;
-  //     let error_indexes: number[] = errorIndexes;
-  //     let test_end: boolean = testEnd;
-  //     let test_difficulty: string = testDifficulty;
-
-  //     if (event.key === "Backspace") {
-  //       [
-  //         wordIndex,
-  //         letterIndex,
-  //         key_press,
-  //         caret_last,
-  //         extra_letter,
-  //         extra_letter_count,
-  //         display_words,
-  //         current_mistakes,
-  //         error_indexes,
-  //       ] = handleBackspace(
-  //         wordIndex,
-  //         letterIndex,
-  //         key_press,
-  //         caret_last,
-  //         extra_letter,
-  //         extra_letter_count,
-  //         display_words,
-  //         current_mistakes,
-  //         error_indexes
-  //       );
-  //     } else {
-  //       if (!caret_last) {
-  //         [
-  //           wordIndex,
-  //           letterIndex,
-  //           key_press,
-  //           caret_last,
-  //           total_mistakes,
-  //           current_mistakes,
-  //           error_indexes,
-  //           correct_words,
-  //           test_end,
-  //         ] = handleNormalKeypress(
-  //           event.key,
-  //           wordIndex,
-  //           letterIndex,
-  //           key_press,
-  //           display_words,
-  //           caret_last,
-  //           total_mistakes,
-  //           current_mistakes,
-  //           error_indexes,
-  //           correct_words,
-  //           test_end,
-  //           test_difficulty
-  //         );
-  //       } else {
-  //         [
-  //           wordIndex,
-  //           letterIndex,
-  //           key_press,
-  //           caret_last,
-  //           extra_letter,
-  //           extra_letter_count,
-  //           total_mistakes,
-  //           current_mistakes,
-  //           error_indexes,
-  //           correct_words,
-  //           test_end,
-  //         ] = handleLastKeypress(
-  //           event.key,
-  //           wordIndex,
-  //           letterIndex,
-  //           key_press,
-  //           display_words,
-  //           caret_last,
-  //           extra_letter,
-  //           extra_letter_count,
-  //           total_mistakes,
-  //           current_mistakes,
-  //           error_indexes,
-  //           correct_words,
-  //           test_end,
-  //           test_difficulty
-  //         );
-  //       }
-  //     }
-
-  //     setActiveWordIndex(wordIndex);
-  //     setActiveLetterIndex(letterIndex);
-  //     setKeyPress(key_press);
-  //     setCaretLast(caret_last);
-  //     setExtraLetter(extra_letter);
-  //     setExtraLetterCount(extra_letter_count);
-  //     setDisplayWord(display_words);
-  //     setTotalMistakes(total_mistakes);
-  //     setCurrentMistakes(current_mistakes);
-  //     setCorrectWords(correct_words);
-  //     setErrorIndexes(error_indexes);
-  //     setTestEnd(test_end);
-  //   }
-  // };
 
   const inpChangeHandler = (event: React.ChangeEvent) => {
     let dom = event.target as HTMLInputElement;
@@ -532,14 +333,17 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
         id="hidden-textarea"
         className="absolute opacity-0 z-[-5]"
         value={inpValue}
+        ref={containerRef}
         onChange={inpChangeHandler}
         onKeyDown={inpKeyDownHandler}
+        autoComplete="off"
       />
       <div
+        onClick={() => {
+          document.getElementById("hidden-textarea")?.focus();
+          wordActiveRef.current?.scrollIntoView();
+        }}
         id="container"
-        // tabIndex={0}
-        ref={containerRef}
-        // onKeyDown={keyDownHandler}
         className={
           "w-[1200px]  overflow-hidden  flex flex-wrap outline-none px-1  font-[3000] font-roboto text-lightTest caret-transparent select-none" +
           " " +
