@@ -12,14 +12,6 @@ const App = () => {
   return (
     <>
       <div
-        onClick={(event) => {
-          let dom = event.target as HTMLElement;
-          if (dom.innerText !== "custom") {
-            containerRef.current?.focus();
-          } else {
-            containerRef.current?.blur();
-          }
-        }}
         onMouseOver={() => {
           document.body.style.cursor = "context-menu";
         }}
