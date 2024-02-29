@@ -20,6 +20,7 @@ const CustomAdder = (props: CustomAdderPropsType) => {
 
   useEffect(() => {
     inputRef.current?.select();
+    inputRef.current?.focus();
   }, []);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {

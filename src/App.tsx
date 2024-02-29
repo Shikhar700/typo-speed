@@ -13,6 +13,8 @@ const App = () => {
     <>
       <div
         onClick={() => {
+          console.log("hello");
+
           containerRef.current?.focus();
         }}
         onMouseOver={() => {
