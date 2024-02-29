@@ -38,7 +38,7 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
   const wordActiveRef = useRef<HTMLDivElement>(null);
   const wordInactiveRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
-  const inpRef = useRef<HTMLInputElement>(null);
+  const inpRef = useRef<HTMLTextAreaElement>(null);
 
   //generated words state
   const [displayWord, setDisplayWord] = useState<string[]>([]);
@@ -81,6 +81,7 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
   //initial useEffect
   useEffect(() => {
     document.getElementById("container")?.focus();
+    document.getElementById("hidden-textarea")?.focus();
     inpRef.current?.focus();
     setDisplayWord([]);
     wordGenerator();
@@ -236,300 +237,309 @@ const WordsContainer = forwardRef<HTMLDivElement>((props, containerRef) => {
     arr.map((ins) => setDisplayWord((prev) => [...prev, ins]));
   };
 
-  const keyDownHandler = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  // const keyDownHandler = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  //   if (!(quickRestart === "off")) {
+  //     if (event.key === (quickRestart === "esc" ? "Escape" : "Enter")) {
+  //       dispatch(CHANGE_IS_CHANGED());
+  //     }
+  //   }
+
+  //   if (checkValidKey(event.key)) {
+  //     document.body.style.cursor = "none";
+  //     if (!testStart) {
+  //       setTestStart(true);
+  //       if (mode === "time") {
+  //         setStartTime(new Date().getTime());
+  //         let timer = timeDuration;
+  //         intervalRef.current = setInterval(() => {
+  //           if (timer > 1) {
+  //             timer--;
+  //             dispatch(DECREMENT_DURATION());
+  //           } else {
+  //             dispatch(DECREMENT_DURATION());
+  //             setTimeout(() => {
+  //               clearInterval(intervalRef.current);
+  //               setTestEnd(true);
+  //               document.body.style.cursor = "context-menu";
+  //             }, 50);
+  //           }
+  //         }, 1000);
+  //       } else {
+  //         setStartTime(new Date().getTime());
+  //       }
+  //     }
+  //     let wordIndex: number = activeWordIndex;
+  //     let letterIndex: number = activeLetterIndex;
+  //     let key_press: number = keyPress;
+  //     let caret_last: boolean = caretLast;
+  //     let extra_letter: boolean = extraLetter;
+  //     let extra_letter_count: number = extraLetterCount;
+  //     let display_words: string[] = displayWord;
+  //     let total_mistakes: number = totalMistakes;
+  //     let current_mistakes: number = currentMistakes;
+  //     let correct_words: number = correctWords;
+  //     let error_indexes: number[] = errorIndexes;
+  //     let test_end: boolean = testEnd;
+  //     let test_difficulty: string = testDifficulty;
+
+  //     if (event.key === "Backspace") {
+  //       [
+  //         wordIndex,
+  //         letterIndex,
+  //         key_press,
+  //         caret_last,
+  //         extra_letter,
+  //         extra_letter_count,
+  //         display_words,
+  //         current_mistakes,
+  //         error_indexes,
+  //       ] = handleBackspace(
+  //         wordIndex,
+  //         letterIndex,
+  //         key_press,
+  //         caret_last,
+  //         extra_letter,
+  //         extra_letter_count,
+  //         display_words,
+  //         current_mistakes,
+  //         error_indexes
+  //       );
+  //     } else {
+  //       if (!caret_last) {
+  //         [
+  //           wordIndex,
+  //           letterIndex,
+  //           key_press,
+  //           caret_last,
+  //           total_mistakes,
+  //           current_mistakes,
+  //           error_indexes,
+  //           correct_words,
+  //           test_end,
+  //         ] = handleNormalKeypress(
+  //           event.key,
+  //           wordIndex,
+  //           letterIndex,
+  //           key_press,
+  //           display_words,
+  //           caret_last,
+  //           total_mistakes,
+  //           current_mistakes,
+  //           error_indexes,
+  //           correct_words,
+  //           test_end,
+  //           test_difficulty
+  //         );
+  //       } else {
+  //         [
+  //           wordIndex,
+  //           letterIndex,
+  //           key_press,
+  //           caret_last,
+  //           extra_letter,
+  //           extra_letter_count,
+  //           total_mistakes,
+  //           current_mistakes,
+  //           error_indexes,
+  //           correct_words,
+  //           test_end,
+  //         ] = handleLastKeypress(
+  //           event.key,
+  //           wordIndex,
+  //           letterIndex,
+  //           key_press,
+  //           display_words,
+  //           caret_last,
+  //           extra_letter,
+  //           extra_letter_count,
+  //           total_mistakes,
+  //           current_mistakes,
+  //           error_indexes,
+  //           correct_words,
+  //           test_end,
+  //           test_difficulty
+  //         );
+  //       }
+  //     }
+
+  //     setActiveWordIndex(wordIndex);
+  //     setActiveLetterIndex(letterIndex);
+  //     setKeyPress(key_press);
+  //     setCaretLast(caret_last);
+  //     setExtraLetter(extra_letter);
+  //     setExtraLetterCount(extra_letter_count);
+  //     setDisplayWord(display_words);
+  //     setTotalMistakes(total_mistakes);
+  //     setCurrentMistakes(current_mistakes);
+  //     setCorrectWords(correct_words);
+  //     setErrorIndexes(error_indexes);
+  //     setTestEnd(test_end);
+  //   }
+  // };
+
+  const inpChangeHandler = (event: React.ChangeEvent) => {
+    let dom = event.target as HTMLInputElement;
+    let key = dom.value.slice(-1);
+    if (inpValue.length > dom.value.length) {
+      key = "Backspace";
+    }
+    if (checkValidKey(key)) {
+      document.body.style.cursor = "none";
+      if (!testStart) {
+        setTestStart(true);
+        if (mode === "time") {
+          setStartTime(new Date().getTime());
+          let timer = timeDuration;
+          intervalRef.current = setInterval(() => {
+            if (timer > 1) {
+              timer--;
+              dispatch(DECREMENT_DURATION());
+            } else {
+              dispatch(DECREMENT_DURATION());
+              setTimeout(() => {
+                clearInterval(intervalRef.current);
+                setTestEnd(true);
+                document.body.style.cursor = "context-menu";
+              }, 50);
+            }
+          }, 1000);
+        } else {
+          setStartTime(new Date().getTime());
+        }
+      }
+      let wordIndex: number = activeWordIndex;
+      let letterIndex: number = activeLetterIndex;
+      let key_press: number = keyPress;
+      let caret_last: boolean = caretLast;
+      let extra_letter: boolean = extraLetter;
+      let extra_letter_count: number = extraLetterCount;
+      let display_words: string[] = displayWord;
+      let total_mistakes: number = totalMistakes;
+      let current_mistakes: number = currentMistakes;
+      let correct_words: number = correctWords;
+      let error_indexes: number[] = errorIndexes;
+      let test_end: boolean = testEnd;
+      let test_difficulty: string = testDifficulty;
+
+      if (key === "Backspace") {
+        [
+          wordIndex,
+          letterIndex,
+          key_press,
+          caret_last,
+          extra_letter,
+          extra_letter_count,
+          display_words,
+          current_mistakes,
+          error_indexes,
+        ] = handleBackspace(
+          wordIndex,
+          letterIndex,
+          key_press,
+          caret_last,
+          extra_letter,
+          extra_letter_count,
+          display_words,
+          current_mistakes,
+          error_indexes
+        );
+      } else {
+        if (!caret_last) {
+          [
+            wordIndex,
+            letterIndex,
+            key_press,
+            caret_last,
+            total_mistakes,
+            current_mistakes,
+            error_indexes,
+            correct_words,
+            test_end,
+          ] = handleNormalKeypress(
+            key,
+            wordIndex,
+            letterIndex,
+            key_press,
+            display_words,
+            caret_last,
+            total_mistakes,
+            current_mistakes,
+            error_indexes,
+            correct_words,
+            test_end,
+            test_difficulty
+          );
+        } else {
+          [
+            wordIndex,
+            letterIndex,
+            key_press,
+            caret_last,
+            extra_letter,
+            extra_letter_count,
+            total_mistakes,
+            current_mistakes,
+            error_indexes,
+            correct_words,
+            test_end,
+          ] = handleLastKeypress(
+            key,
+            wordIndex,
+            letterIndex,
+            key_press,
+            display_words,
+            caret_last,
+            extra_letter,
+            extra_letter_count,
+            total_mistakes,
+            current_mistakes,
+            error_indexes,
+            correct_words,
+            test_end,
+            test_difficulty
+          );
+        }
+      }
+
+      setActiveWordIndex(wordIndex);
+      setActiveLetterIndex(letterIndex);
+      setKeyPress(key_press);
+      setCaretLast(caret_last);
+      setExtraLetter(extra_letter);
+      setExtraLetterCount(extra_letter_count);
+      setDisplayWord(display_words);
+      setTotalMistakes(total_mistakes);
+      setCurrentMistakes(current_mistakes);
+      setCorrectWords(correct_words);
+      setErrorIndexes(error_indexes);
+      setTestEnd(test_end);
+
+      setInpValue(dom.value);
+    }
+  };
+
+  const inpKeyDownHandler = (event: React.KeyboardEvent) => {
     if (!(quickRestart === "off")) {
       if (event.key === (quickRestart === "esc" ? "Escape" : "Enter")) {
         dispatch(CHANGE_IS_CHANGED());
       }
-    }
-
-    if (checkValidKey(event.key)) {
-      document.body.style.cursor = "none";
-      if (!testStart) {
-        setTestStart(true);
-        if (mode === "time") {
-          setStartTime(new Date().getTime());
-          let timer = timeDuration;
-          intervalRef.current = setInterval(() => {
-            if (timer > 1) {
-              timer--;
-              dispatch(DECREMENT_DURATION());
-            } else {
-              dispatch(DECREMENT_DURATION());
-              setTimeout(() => {
-                clearInterval(intervalRef.current);
-                setTestEnd(true);
-                document.body.style.cursor = "context-menu";
-              }, 50);
-            }
-          }, 1000);
-        } else {
-          setStartTime(new Date().getTime());
-        }
-      }
-      let wordIndex: number = activeWordIndex;
-      let letterIndex: number = activeLetterIndex;
-      let key_press: number = keyPress;
-      let caret_last: boolean = caretLast;
-      let extra_letter: boolean = extraLetter;
-      let extra_letter_count: number = extraLetterCount;
-      let display_words: string[] = displayWord;
-      let total_mistakes: number = totalMistakes;
-      let current_mistakes: number = currentMistakes;
-      let correct_words: number = correctWords;
-      let error_indexes: number[] = errorIndexes;
-      let test_end: boolean = testEnd;
-      let test_difficulty: string = testDifficulty;
-
-      if (event.key === "Backspace") {
-        [
-          wordIndex,
-          letterIndex,
-          key_press,
-          caret_last,
-          extra_letter,
-          extra_letter_count,
-          display_words,
-          current_mistakes,
-          error_indexes,
-        ] = handleBackspace(
-          wordIndex,
-          letterIndex,
-          key_press,
-          caret_last,
-          extra_letter,
-          extra_letter_count,
-          display_words,
-          current_mistakes,
-          error_indexes
-        );
-      } else {
-        if (!caret_last) {
-          [
-            wordIndex,
-            letterIndex,
-            key_press,
-            caret_last,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-          ] = handleNormalKeypress(
-            event.key,
-            wordIndex,
-            letterIndex,
-            key_press,
-            display_words,
-            caret_last,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-            test_difficulty
-          );
-        } else {
-          [
-            wordIndex,
-            letterIndex,
-            key_press,
-            caret_last,
-            extra_letter,
-            extra_letter_count,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-          ] = handleLastKeypress(
-            event.key,
-            wordIndex,
-            letterIndex,
-            key_press,
-            display_words,
-            caret_last,
-            extra_letter,
-            extra_letter_count,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-            test_difficulty
-          );
-        }
-      }
-
-      setActiveWordIndex(wordIndex);
-      setActiveLetterIndex(letterIndex);
-      setKeyPress(key_press);
-      setCaretLast(caret_last);
-      setExtraLetter(extra_letter);
-      setExtraLetterCount(extra_letter_count);
-      setDisplayWord(display_words);
-      setTotalMistakes(total_mistakes);
-      setCurrentMistakes(current_mistakes);
-      setCorrectWords(correct_words);
-      setErrorIndexes(error_indexes);
-      setTestEnd(test_end);
-    }
-  };
-
-  const inpChangeHandler = (event: React.ChangeEvent) => {
-    let dom = event.target as HTMLInputElement;
-    if (!(quickRestart === "off")) {
-      if (dom.value === (quickRestart === "esc" ? "Escape" : "Enter")) {
-        dispatch(CHANGE_IS_CHANGED());
-      }
-    }
-
-    if (checkValidKey(dom.value)) {
-      document.body.style.cursor = "none";
-      if (!testStart) {
-        setTestStart(true);
-        if (mode === "time") {
-          setStartTime(new Date().getTime());
-          let timer = timeDuration;
-          intervalRef.current = setInterval(() => {
-            if (timer > 1) {
-              timer--;
-              dispatch(DECREMENT_DURATION());
-            } else {
-              dispatch(DECREMENT_DURATION());
-              setTimeout(() => {
-                clearInterval(intervalRef.current);
-                setTestEnd(true);
-                document.body.style.cursor = "context-menu";
-              }, 50);
-            }
-          }, 1000);
-        } else {
-          setStartTime(new Date().getTime());
-        }
-      }
-      let wordIndex: number = activeWordIndex;
-      let letterIndex: number = activeLetterIndex;
-      let key_press: number = keyPress;
-      let caret_last: boolean = caretLast;
-      let extra_letter: boolean = extraLetter;
-      let extra_letter_count: number = extraLetterCount;
-      let display_words: string[] = displayWord;
-      let total_mistakes: number = totalMistakes;
-      let current_mistakes: number = currentMistakes;
-      let correct_words: number = correctWords;
-      let error_indexes: number[] = errorIndexes;
-      let test_end: boolean = testEnd;
-      let test_difficulty: string = testDifficulty;
-
-      if (dom.value === "Backspace") {
-        [
-          wordIndex,
-          letterIndex,
-          key_press,
-          caret_last,
-          extra_letter,
-          extra_letter_count,
-          display_words,
-          current_mistakes,
-          error_indexes,
-        ] = handleBackspace(
-          wordIndex,
-          letterIndex,
-          key_press,
-          caret_last,
-          extra_letter,
-          extra_letter_count,
-          display_words,
-          current_mistakes,
-          error_indexes
-        );
-      } else {
-        if (!caret_last) {
-          [
-            wordIndex,
-            letterIndex,
-            key_press,
-            caret_last,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-          ] = handleNormalKeypress(
-            dom.value,
-            wordIndex,
-            letterIndex,
-            key_press,
-            display_words,
-            caret_last,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-            test_difficulty
-          );
-        } else {
-          [
-            wordIndex,
-            letterIndex,
-            key_press,
-            caret_last,
-            extra_letter,
-            extra_letter_count,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-          ] = handleLastKeypress(
-            dom.value,
-            wordIndex,
-            letterIndex,
-            key_press,
-            display_words,
-            caret_last,
-            extra_letter,
-            extra_letter_count,
-            total_mistakes,
-            current_mistakes,
-            error_indexes,
-            correct_words,
-            test_end,
-            test_difficulty
-          );
-        }
-      }
-
-      setActiveWordIndex(wordIndex);
-      setActiveLetterIndex(letterIndex);
-      setKeyPress(key_press);
-      setCaretLast(caret_last);
-      setExtraLetter(extra_letter);
-      setExtraLetterCount(extra_letter_count);
-      setDisplayWord(display_words);
-      setTotalMistakes(total_mistakes);
-      setCurrentMistakes(current_mistakes);
-      setCorrectWords(correct_words);
-      setErrorIndexes(error_indexes);
-      setTestEnd(test_end);
     }
   };
 
   return (
     <main className="w-full flex justify-center relative">
       <input
+        id="hidden-textarea"
         className="absolute opacity-0 z-[-5]"
         value={inpValue}
         onChange={inpChangeHandler}
-        ref={inpRef}
+        onKeyDown={inpKeyDownHandler}
       />
       <div
         id="container"
         // tabIndex={0}
         ref={containerRef}
-        onKeyDown={keyDownHandler}
+        // onKeyDown={keyDownHandler}
         className={
           "w-[1200px]  overflow-hidden  flex flex-wrap outline-none px-1  font-[3000] font-roboto text-lightTest caret-transparent select-none" +
           " " +
