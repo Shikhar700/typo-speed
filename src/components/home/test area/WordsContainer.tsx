@@ -72,9 +72,10 @@ const WordsContainer = forwardRef<HTMLInputElement>((props, containerRef) => {
 
   //initial useEffect
   useEffect(() => {
-    document.getElementById("container")?.focus();
-    document.getElementById("hidden-textarea")?.focus();
-    inpRef.current?.focus();
+    if (!bgBlur) {
+      document.getElementById("hidden-textarea")?.focus();
+      inpRef.current?.focus();
+    }
     setDisplayWord([]);
     wordGenerator();
   }, [isChanged]);

@@ -85,6 +85,7 @@ const CustomAdder = (props: CustomAdderPropsType) => {
         let dom = event.target as HTMLElement;
         if (dom.tagName === "MAIN") {
           dispatch(REMOVE_BLUR());
+          dispatch(CHANGE_IS_CHANGED());
           props.closeFunc();
         }
       }}
