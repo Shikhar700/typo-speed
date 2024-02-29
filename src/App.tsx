@@ -14,8 +14,10 @@ const App = () => {
       <div
         onClick={(event) => {
           let dom = event.target as HTMLElement;
-          if (dom.innerText !== "cumtom") {
+          if (dom.innerText !== "custom") {
             containerRef.current?.focus();
+          } else {
+            containerRef.current?.blur();
           }
         }}
         onMouseOver={() => {

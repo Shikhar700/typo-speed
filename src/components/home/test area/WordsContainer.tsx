@@ -33,6 +33,7 @@ const WordsContainer = forwardRef<HTMLInputElement>((props, containerRef) => {
     (state) => state.letterSpacing.letterSpacing
   );
   const wordSpacing = useAppSelector((state) => state.wordSpacing.wordSpacing);
+  const bgBlur = useAppSelector((state) => state.blurBg.blur);
 
   //ref for word and container
   const wordActiveRef = useRef<HTMLDivElement>(null);
@@ -71,8 +72,12 @@ const WordsContainer = forwardRef<HTMLInputElement>((props, containerRef) => {
 
   //initial useEffect
   useEffect(() => {
-    document.getElementById("container")?.focus();
-    document.getElementById("hidden-textarea")?.focus();
+    if (!bgBlur) {
+      console.log("hello");
+
+      document.getElementById("container")?.focus();
+      document.getElementById("hidden-textarea")?.focus();
+    }
     inpRef.current?.focus();
     setDisplayWord([]);
     wordGenerator();
